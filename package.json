@@ -1,7 +1,7 @@
 {
   "name": "cdnizer",
   "version": "0.2.3",
-  "description": "A plugin for Gulp",
+  "description": "A module for replacing local links with CDN links, includes fallbacks and customization.",
   "keywords": [
     "cdn"
   ],
@@ -18,8 +18,7 @@
     "url": "git://github.com/OverZealous/cdnizer.git"
   },
   "scripts": {
-    "test": "istanbul test _mocha --report html -- test/*.js --reporter spec",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
   },
   "dependencies": {
     "minimatch": "~0.2.14",

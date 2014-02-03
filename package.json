@@ -1,0 +1,46 @@
+{
+  "name": "cdnizer",
+  "version": "0.1.3",
+  "description": "A plugin for Gulp",
+  "keywords": [
+    "gulpplugin",
+    "cdn"
+  ],
+  "homepage": "https://github.com/OverZealous/cdnizer",
+  "bugs": "https://github.com/OverZealous/cdnizer/issues",
+  "author": {
+    "name": "Phil DeJarnett",
+    "email": "",
+    "url": "https://github.com/OverZealous"
+  },
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/OverZealous/cdnizer.git"
+  },
+  "scripts": {
+    "test": "istanbul test _mocha --report html -- test/*.js --reporter spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "dependencies": {
+    "minimatch": "~0.2.14",
+    "deepmerge": "~0.2.7",
+    "lodash": "~2.4.1"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "coveralls": "*",
+    "mocha-lcov-reporter": "*",
+    "istanbul": "*",
+    "should": "~2.1.0"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=1.2.10"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ]
+}

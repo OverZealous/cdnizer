@@ -7,86 +7,84 @@ It also provides optional fallback scripts for failed file loading.  By default 
 
 ## Usage
 
-First, install `cdnizer` as a development dependency:
+First, install `cdnizer`:
 
 ```shell
-npm install --save-dev cdnizer
+npm install --save cdnizer
 ```
 
-Then, add it to your `gulpfile.js`:
+Then, use it like so:
 
 ```javascript
-var cdnizer = require("cdnizer");
-
-gulp.src("./src/index.html")
-        .pipe(cdnizer({
-            defaultBase: "//my.cdn.host/base",
-            allowRev: true,
-            allowMin: true,
-            files: [
-                'js/app.js',
-                {
-                    file: 'vendor/angular/angular.js',
-                    package: 'angular',
-                    test: 'angular',
-                    // angular has a bizarre version string inside bower, with extra information.
-                    // using major.minor.patch directly ensures it works with the CDN
-                    cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
-                },
-                {
-                    file: 'vendor/firebase/firebase.js',
-                    test: 'Firebase',
-                    cdn: '//cdn.firebase.com/v0/firebase.js'
-                }
-            ]
-        })
-        .pipe(gulp.dest("./dist"));
+var cdnizerFactory = require("cdnizer"),
+	cdnizer = cdnizer({
+                  defaultBase: "//my.cdn.host/base",
+                  allowRev: true,
+                  allowMin: true,
+                  files: [
+                      'js/app.js',
+                      {
+                          file: 'vendor/angular/angular.js',
+                          package: 'angular',
+                          test: 'angular',
+                          // angular has a bizarre version string inside bower, with extra information.
+                          // using major.minor.patch directly ensures it works with the CDN
+                          cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
+                      },
+                      {
+                          file: 'vendor/firebase/firebase.js',
+                          test: 'Firebase',
+                          cdn: '//cdn.firebase.com/v0/firebase.js'
+                      }
+                  ]
+              });
+	var contents = fs.readFileSync('./src/index.html', 'utf8');
+	contents = cdnizer(contents);
 ```
      
 Alternatively, you can just pass in the files array if you don't need to provide any options, and only have custom files:
 
 ```js
-gulp.src("./src/index.html")
-        .pipe(cdnizer([
-            {
-                file: 'vendor/angular/angular.js',
-                package: 'angular',
-                test: 'angular',
-                // use altnerate providers easily
-                cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
-            },
-            {
-                file: 'vendor/firebase/firebase.js',
-                test: 'Firebase',
-                cdn: '//cdn.firebase.com/v0/firebase.js'
-            }
-        ])
-        .pipe(gulp.dest("./dist"));
+var cdnizerFactory = require("cdnizer"),
+	cdnizer = cdnizer([
+		            {
+		                file: 'vendor/angular/angular.js',
+		                package: 'angular',
+		                test: 'angular',
+		                // use altnerate providers easily
+		                cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
+		            },
+		            {
+		                file: 'vendor/firebase/firebase.js',
+		                test: 'Firebase',
+		                cdn: '//cdn.firebase.com/v0/firebase.js'
+		            }
+		        ]);
 ```
 
 You can also use globs to define groups of file, and dynamic filename properties:
 
 ```js
-gulp.src("./src/index.html")
-        .pipe(cdnizer([{
-                file: 'vendor/angular/*.js',
-                package: 'angular',
-                test: 'angular',
-                cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/${ filenameMin }'
-            }])
-        .pipe(gulp.dest("./dist"));
+var cdnizerFactory = require("cdnizer"),
+	cdnizer = cdnizer([{
+	                file: 'vendor/angular/*.js',
+	                package: 'angular',
+	                test: 'angular',
+	                cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/${ filenameMin }'
+	            }]);
 ```
 
 Works great on `url()`s in CSS files, too:
 
 ```js
-gulp.src("./src/css/style.css")
-        .pipe(cdnizer({
-            defaultCDNBase: '//my.cdn.url/',
-            relativeRoot: 'css',
-            files: ['**/*.{gif,png,jpg,jpeg}']
-        })
-        .pipe(gulp.dest("./dist/css/"));
+var cdnizerFactory = require("cdnizer"),
+	cdnizer = cdnizer({
+		            defaultCDNBase: '//my.cdn.url/',
+		            relativeRoot: 'css',
+		            files: ['**/*.{gif,png,jpg,jpeg}']
+		        });
+	var cssFile = fs.readFileSync('./css/style.css', 'utf8');
+	cssFile = cdnizer(cssFile);
 ```
 
 ## API
@@ -123,6 +121,8 @@ Type: `Boolean`
 Default: `true`
 
 Allow for file names with `gulp-rev` appended strings, in the form of `<file>-XXXXXXXX.<ext>`.  If you are using the `gulp-rev` plugin, this will automatically match filenames that have a rev string appeneded to them.  If you are *not* using `gulp-rev`, then you can disable this by setting `allowRev` to `false`, which will prevent possible errors in accidentally matching similar file names.
+
+You can always manually configure your globs to include an optional rev string by using the form `?(<rev glob here>)`, such as `name?(-????????).ext` for appended revs.
 
 #### options.allowMin
 

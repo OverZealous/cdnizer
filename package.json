@@ -3,7 +3,6 @@
   "version": "0.2.2",
   "description": "A plugin for Gulp",
   "keywords": [
-    "gulpplugin",
     "cdn"
   ],
   "homepage": "https://github.com/OverZealous/cdnizer",

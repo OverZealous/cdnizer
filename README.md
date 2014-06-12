@@ -129,7 +129,7 @@ You can always manually configure your globs to include an optional rev string b
 Type: `Boolean`  
 Default: `true`
 
-Allow for file names to have `.min` inserted before the file extension (but after rev, if enabled).  This allows you to use the base name for a file, and have `cndizer` match the minified name.
+Allow for file names that optionally have `.min` inserted before the file extension (but after rev, if enabled).  This allows you to use the base name for a file, and have `cndizer` match the minified name.
 
 #### options.fallbackScript
 

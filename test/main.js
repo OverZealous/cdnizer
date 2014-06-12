@@ -41,7 +41,7 @@ describe("cdnizer: basic input", function() {
 		}, 'index.html', 'index-generic.html');
 	});
 
-	it("should handle min and fallbacks", function() {
+	it("should handle existing min and fallbacks", function() {
 		processInput({
 			files: [
 				{
@@ -51,6 +51,17 @@ describe("cdnizer: basic input", function() {
 			],
 			defaultCDNBase: '//examplecdn'
 		}, 'index.html', 'index-fallback.html');
+	});
+
+	it("should add min with filenameMin", function() {
+		processInput({
+			files: [
+				{
+					file: 'js/**/firebase/firebase.js',
+					cdn: '//examplecdn/js/vendor/firebase/${ filenameMin }'
+				}
+			]
+		}, 'index.html', 'index-filename-min.html');
 	});
 
 });

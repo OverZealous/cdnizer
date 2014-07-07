@@ -218,6 +218,13 @@ The object hashmap gives you full control, using the following properties:
 
 > See [`options.fallbackScript`](#optionsfallbackscript) and [`options.fallbackTest`](#optionsfallbacktest) for more information.
 
+#### options.matchers
+
+Type: `Array`  
+Default: []
+
+Array of custom matchers. Use this to add extra patterns within which you would like to cdn-ize URLs, for example if you have such URLs in data-attributes. For an example of the correct regular expression syntax, see the [default matchers](https://github.com/OverZealous/cdnizer/blob/master/lib/util.js#L28).
+
 ## Help Support This Project
 
 If you'd like to support this and other OverZealous Creations (Phil DeJarnett) projects, [donate via Gittip][gittip-url]!

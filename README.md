@@ -221,9 +221,17 @@ The object hashmap gives you full control, using the following properties:
 #### options.matchers
 
 Type: `Array`  
-Default: []
+Default: `[]`
 
-Array of custom matchers. Use this to add extra patterns within which you would like to cdn-ize URLs, for example if you have such URLs in data-attributes. For an example of the correct regular expression syntax, see the [default matchers](https://github.com/OverZealous/cdnizer/blob/master/lib/util.js#L28).
+Array of custom matchers. Use this to add extra patterns within which you would like to cdn-ize URLs, for example if you have such URLs in data-attributes. The matchers should include regular expressions with three matching groups: 1) Leading characters 2) The actual URL to work on 3) Trailing characters.
+
+Example (matches the ```data-src``` attribute in ```<img>``` tags):<br />
+```matchers: [ { pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi, fallback: false } ]```
+
+You can also specify just a regular expression. In that case, fallback will default to false.
+
+Equivalent example:<br />
+```matchers: [ pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]```
 
 ## Help Support This Project
 

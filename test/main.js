@@ -64,6 +64,21 @@ describe("cdnizer: basic input", function() {
 		}, 'index.html', 'index-filename-min.html');
 	});
 
+  it("should use custom matchers with an object", function() {
+    processInput({
+      files: ['img/**/*.jpg'],
+      defaultCDNBase: '//examplecdn',
+      matchers: [ { pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi, fallback: false } ]
+    }, 'index.html', 'index-data-src.html');
+  });
+
+  it("should use custom matchers with just a regular expression", function() {
+    processInput({
+      files: ['img/**/*.jpg'],
+      defaultCDNBase: '//examplecdn',
+      matchers: [ /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]
+    }, 'index.html', 'index-data-src.html');
+  });
 });
 
 describe("cdnizer: bower tests", function() {

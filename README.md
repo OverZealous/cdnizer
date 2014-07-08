@@ -218,6 +218,21 @@ The object hashmap gives you full control, using the following properties:
 
 > See [`options.fallbackScript`](#optionsfallbackscript) and [`options.fallbackTest`](#optionsfallbacktest) for more information.
 
+#### options.matchers
+
+Type: `Array`  
+Default: `[]`
+
+Array of custom matchers. Use this to add extra patterns within which you would like to cdn-ize URLs, for example if you have such URLs in data-attributes. The matchers should include regular expressions with three matching groups: 1) Leading characters 2) The actual URL to work on 3) Trailing characters.
+
+Example (matches the ```data-src``` attribute in ```<img>``` tags):<br />
+```matchers: [ { pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi, fallback: false } ]```
+
+You can also specify just a regular expression. In that case, fallback will default to false.
+
+Equivalent example:<br />
+```matchers: [ pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]```
+
 ## Help Support This Project
 
 If you'd like to support this and other OverZealous Creations (Phil DeJarnett) projects, [donate via Gittip][gittip-url]!

@@ -17,7 +17,7 @@ Then, use it like so:
 
 ```javascript
 var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizer({
+	cdnizer = cdnizerFactory({
                   defaultBase: "//my.cdn.host/base",
                   allowRev: true,
                   allowMin: true,
@@ -46,7 +46,7 @@ Alternatively, you can just pass in the files array if you don't need to provide
 
 ```js
 var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizer([
+	cdnizer = cdnizerFactory([
 		            {
 		                file: 'vendor/angular/angular.js',
 		                package: 'angular',
@@ -66,7 +66,7 @@ You can also use globs to define groups of file, and dynamic filename properties
 
 ```js
 var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizer([{
+	cdnizer = cdnizerFactory([{
 	                file: 'vendor/angular/*.js',
 	                package: 'angular',
 	                test: 'angular',
@@ -78,7 +78,7 @@ Works great on `url()`s in CSS files, too:
 
 ```js
 var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizer({
+	cdnizer = cdnizerFactory({
 		            defaultCDNBase: '//my.cdn.url/',
 		            relativeRoot: 'css',
 		            files: ['**/*.{gif,png,jpg,jpeg}']
@@ -238,6 +238,8 @@ Equivalent example:<br />
 If you'd like to support this and other OverZealous Creations (Phil DeJarnett) projects, [donate via Gittip][gittip-url]!
 
 [![Support via Gittip][gittip-image]][gittip-url]
+
+You can learn a little more about me and some of the [work I do for open source projects in an article at CDNify.](https://cdnify.com/blog/overzealous-creations/)
 
 ## License
 

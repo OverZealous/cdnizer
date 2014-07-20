@@ -15,9 +15,9 @@ function processInput(opts, fixtureFileName, expectedFileName) {
 		srcFile = fs.readFileSync("test/fixtures/"+fixtureFileName, "utf8"),
 		expected = fs.readFileSync("test/expected/"+expectedFileName, "utf8"),
 		result = converter(srcFile);
-	
+
 	result.should.not.be.empty;
-	
+
 	result.should.equal(expected);
 }
 
@@ -79,10 +79,17 @@ describe("cdnizer: basic input", function() {
       matchers: [ /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]
     }, 'index.html', 'index-data-src.html');
   });
+
+	it("should handle HTML without quoted attributes", function() {
+		processInput({
+			files: ['img/**/*.jpg', 'css/**/*.css', 'js/**/*.js'],
+			defaultCDNBase: '//examplecdn'
+		}, 'index.min.html', 'index-without-quotes.html')
+	});
 });
 
 describe("cdnizer: bower tests", function() {
-	
+
 	it("should handle bower versions (.bowerrc)", function() {
 		processInput({
 			files: [
@@ -110,7 +117,7 @@ describe("cdnizer: bower tests", function() {
 });
 
 describe("cdnizer: css files", function() {
-	
+
 	it("should handle css files (no modification)", function() {
 		processInput(['/no/match'], 'style.css', 'style-none.css');
 	});
@@ -126,7 +133,7 @@ describe("cdnizer: css files", function() {
 
 
 describe("cdnizer: error handling", function() {
-	
+
 	it("should error on no input", function() {
 		(function(){
 			cdnizer();
@@ -141,7 +148,7 @@ describe("cdnizer: error handling", function() {
 			cdnizer({files:[]});
 		}).should.throw();
 	});
-	
+
 	it("should error on invalid input", function() {
 		(function(){
 			cdnizer(9);
@@ -159,7 +166,7 @@ describe("cdnizer: error handling", function() {
 			cdnizer({files:{}});
 		}).should.throw();
 	});
-	
+
 	it("should error on invalid files", function() {
 		(function(){
 			cdnizer({files:[{file:9}]});
@@ -171,5 +178,5 @@ describe("cdnizer: error handling", function() {
 			cdnizer({files:['/not/invalid', {file:new Date()}]});
 		}).should.throw();
 	});
-	
+
 });

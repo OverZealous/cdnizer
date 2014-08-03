@@ -21,7 +21,7 @@
     "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
   },
   "dependencies": {
-    "minimatch": "~0.2.14",
+    "minimatch": "^1.0.0",
     "deepmerge": "~0.2.7",
     "lodash": "~2.4.1"
   },
@@ -30,7 +30,7 @@
     "coveralls": "*",
     "mocha-lcov-reporter": "*",
     "istanbul": "*",
-    "should": "~2.1.0"
+    "should": "^4.0.4"
   },
   "engines": {
     "node": ">=0.8.0",

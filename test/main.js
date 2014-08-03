@@ -1,6 +1,7 @@
 /*global describe, it*/
 "use strict";
 
+//noinspection JSUnusedGlobalSymbols
 var should = require("should"),
 	fs = require("fs");
 
@@ -64,27 +65,38 @@ describe("cdnizer: basic input", function() {
 		}, 'index.html', 'index-filename-min.html');
 	});
 
-  it("should use custom matchers with an object", function() {
-    processInput({
-      files: ['img/**/*.jpg'],
-      defaultCDNBase: '//examplecdn',
-      matchers: [ { pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi, fallback: false } ]
-    }, 'index.html', 'index-data-src.html');
-  });
+	it("should use custom matchers with an object", function() {
+		processInput({
+			files: ['img/**/*.jpg'],
+			defaultCDNBase: '//examplecdn',
+			matchers: [
+				{ pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi, fallback: false }
+			]
+		}, 'index.html', 'index-data-src.html');
+	});
 
-  it("should use custom matchers with just a regular expression", function() {
-    processInput({
-      files: ['img/**/*.jpg'],
-      defaultCDNBase: '//examplecdn',
-      matchers: [ /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]
-    }, 'index.html', 'index-data-src.html');
-  });
+	it("should use custom matchers with just a regular expression", function() {
+		processInput({
+			files: ['img/**/*.jpg'],
+			defaultCDNBase: '//examplecdn',
+			matchers: [ /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]
+		}, 'index.html', 'index-data-src.html');
+	});
 
 	it("should handle HTML without quoted attributes", function() {
 		processInput({
 			files: ['img/**/*.jpg', 'css/**/*.css', 'js/**/*.js'],
 			defaultCDNBase: '//examplecdn'
 		}, 'index.min.html', 'index-without-quotes.html')
+	});
+
+	it("should correctly handle other attributes within tags", function() {
+		// NOTE: matchers are purposefully over-eager in their pattern matching,
+		// to encourage re-processing of the same tag if it matches more than once!
+		processInput({
+			files: ['**/*.jpg', '**/*.css', '**/*.js'],
+			defaultCDNBase: '//examplecdn'
+		}, 'index-attribs.html', 'index-attribs.html')
 	});
 });
 

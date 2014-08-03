@@ -13,7 +13,7 @@ function makeCdnizer(opts) {
 
 		var canAddFallback = opts.shouldAddFallback && contents.indexOf('<head') !== -1,
 			didAddFallback = false;
-			
+
 		_.union(opts.matchers, util.matchers).forEach(function(m) {
 			contents = contents.replace(m.pattern, function(match, pre, url, post) {
 				var fileInfo = util.findFileInfo(url, opts), result, params;
@@ -41,17 +41,17 @@ function makeCdnizer(opts) {
 				}
 			});
 		});
-		
+
 		if(didAddFallback) {
 			contents = contents.replace(/<link|<script|<\/head/i, function(m) {
 				return opts.fallbackScript + m;
 			});
 		}
-		
+
 		return contents;
 	}
 
 	return cdnizer;
-};
+}
 
 module.exports = makeCdnizer;

@@ -7,7 +7,7 @@ It also provides optional fallback scripts for failed file loading.  By default 
 
 ### New in version 1.0
 
-cdnizer now can load CDN data from existing `*-cdn-data` packages, currently `google-cdn-data`, `cdnjs-cdn-data`, and `jsdelivr-cdn-data`.  Now you can [configure common public CDNs with a single line](#optionsfilescommoncdn)!
+cdnizer now can load CDN data from existing `*-cdn-data` packages, currently `google-cdn-data`, `cdnjs-cdn-data`, and `jsdelivr-cdn-data`.  Now you can [configure common public CDNs with a single line](#optionsfilescommon-cdn)!
 
 ### Possible breaking change in 1.0
 
@@ -252,7 +252,7 @@ The object hashmap gives you full control, using the following properties:
 
 > ##### options.files[].common
 
-> Load in the default data for an existing common public CDN.  This has the same format as a [public CDN string](#optionsfilescommoncdn) above.
+> Load in the default data for an existing common public CDN.  This has the same format as a [public CDN string](#optionsfilescommon-cdn) above.
 
 > Using this option allows you to customize the settings for the package, by overriding any property in this section (e.g.: providing `test`, or a different `package` name).
 

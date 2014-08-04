@@ -143,6 +143,48 @@ describe("cdnizer: css files", function() {
 	});
 });
 
+describe("cdnizer: cdn-data", function() {
+
+	it("should handle known google-cdn-data", function() {
+		processInput({
+			files: [
+				'google:jquery@1.0.0',
+				'google:angular'
+			]
+		}, 'index-cdn-data.html', 'index-cdn-data-google.html');
+	});
+
+	it("should handle known cdnjs-cdn-data", function() {
+		processInput({
+			files: [
+				{
+					common: 'cdnjs:angular.js',
+					package: 'angular'
+				}
+			]
+		}, 'index-cdn-data.html', 'index-cdn-data-cdnjs.html');
+	});
+
+	it("should handle known jsdelivr-cdn-data", function() {
+		processInput({
+			files: [
+				'jsdelivr:dojo@1.2.3'
+			]
+		}, 'index-cdn-data.html', 'index-cdn-data-jsdelivr.html');
+	});
+
+	it("should handle cdns with custom filenames", function() {
+		processInput({
+			files: [
+				{
+					file: 'js/vendor/custom/jquery-ui-foo.js',
+					common: 'google:jquery-ui@4.4.4'
+				}
+			]
+		}, 'index-cdn-data.html', 'index-cdn-data-filename.html');
+	});
+});
+
 
 describe("cdnizer: error handling", function() {
 

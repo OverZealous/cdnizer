@@ -1,6 +1,5 @@
 var path = require('path'),
 	_ = require('lodash'),
-	merge = require('deepmerge'),
 	util = require('./lib/util'),
 	parseOptions = require('./lib/parseOptions');
 
@@ -19,7 +18,7 @@ function makeCdnizer(opts) {
 				var fileInfo = util.findFileInfo(url, opts), result, params;
 				if(fileInfo) {
 					result = pre;
-					params = merge(util.getVersionInfo(fileInfo.package, opts), {
+					params = _.merge(util.getVersionInfo(fileInfo, opts), {
 						defaultCDNBase: opts.defaultCDNBase,
 						filepath: url,
 						filepathRel: path.join(opts.relativeRoot, url).replace(/^\//, ''),

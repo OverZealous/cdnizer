@@ -21,9 +21,11 @@
     "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
   },
   "dependencies": {
-    "minimatch": "^1.0.0",
-    "deepmerge": "~0.2.7",
-    "lodash": "~2.4.1"
+    "cdnjs-cdn-data": "^0.1.1",
+    "google-cdn-data": "^0.1.6",
+    "jsdelivr-cdn-data": "^0.1.1",
+    "lodash": "~2.4.1",
+    "minimatch": "^1.0.0"
   },
   "devDependencies": {
     "mocha": "*",

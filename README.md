@@ -1,9 +1,19 @@
 # cdnizer
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
-This plugin will replace references in HTML and other files with CDN locations.  It's flexible without being overly complicated, and handles private *and* public CDNs.  It can use your bower installation to determine file versions.
+This library will replace references in HTML and other files with CDN locations.  It's flexible without being overly complicated, and handles private *and* public CDNs.  It can use your bower installation to determine file versions.
 
 It also provides optional fallback scripts for failed file loading.  By default it can only handle failed JavaScript files, but it shouldn't be too difficult to provide a better script.
+
+### New in version 1.0
+
+cdnizer now can load CDN data from existing `*-cdn-data` packages, currently `google-cdn-data`, `cdnjs-cdn-data`, and `jsdelivr-cdn-data`.  Now you can [configure common public CDNs with a single line](#optionsfilescommoncdn)!
+
+### Possible breaking change in 1.0
+
+I've changed the `version` field in this release.  Previously, it was the exact version as it existing within bower.  Now, `version` is the string `major(.minor)?(.patch)?`, with any trailing (`-beta*`, `-snapshot*`, etc) information removed.  (Characters not separated by a hyphen are not affected.)
+
+You can still access the full version string via `versionFull`, which is not modified at all.
 
 ## Usage
 
@@ -27,9 +37,7 @@ var cdnizerFactory = require("cdnizer"),
                           file: 'vendor/angular/angular.js',
                           package: 'angular',
                           test: 'angular',
-                          // angular has a bizarre version string inside bower, with extra information.
-                          // using major.minor.patch directly ensures it works with the CDN
-                          cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
+                          cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/angular.min.js'
                       },
                       {
                           file: 'vendor/firebase/firebase.js',
@@ -51,8 +59,8 @@ var cdnizerFactory = require("cdnizer"),
 		                file: 'vendor/angular/angular.js',
 		                package: 'angular',
 		                test: 'angular',
-		                // use altnerate providers easily
-		                cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
+		                // use alternate providers easily
+		                cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ version }/angular.min.js'
 		            },
 		            {
 		                file: 'vendor/firebase/firebase.js',
@@ -70,8 +78,19 @@ var cdnizerFactory = require("cdnizer"),
 	                file: 'vendor/angular/*.js',
 	                package: 'angular',
 	                test: 'angular',
-	                cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/${ filenameMin }'
+	                cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/${ filenameMin }'
 	            }]);
+```
+
+**New in v1.0**, you can use simplified strings for common public CDNs, like so:
+
+```js
+var cdnizerFactory = require("cdnizer"),
+	cdnizer = cdnizerFactory([
+					'google:angular', // that's it!
+					'cdnjs:jquery',
+					'jsdelivr:lodash'
+				]);
 ```
 
 Works great on `url()`s in CSS files, too:
@@ -105,7 +124,7 @@ Used for a default, custom CDN, usually for your own files.  This will be used i
 Type: `String`  
 Default: `'${ defaultCDNBase }/${ filepathRel }'`
 
-This is the default pattern used for generating CDN links when one isn't provided by a specific file. 
+This is the default pattern used for generating CDN links when one isn't provided by a specific file.
 
 #### options.relativeRoot
 
@@ -134,7 +153,7 @@ Allow for file names that optionally have `.min` inserted before the file extens
 #### options.fallbackScript
 
 Type: `String`  
-Default: 
+Default:
 
 ```html
 <script>
@@ -144,9 +163,9 @@ function cdnizerLoad(u) {
 </script>
 ```
 
-Overwrite the default fallback script.  If any of the inputs has a fallback, this script is injected before the first occurence of `<link`, `<script`, or `</head>` in the HTML page.  Ignored for files that don't contain `<head`.
+Overwrite the default fallback script.  If any of the inputs has a fallback, this script is injected before the first occurrence of `<link`, `<script`, or `</head>` in the HTML page.  Ignored for files that don't contain `<head`.
 
-If you already have a script loader (such as yepnope or Modernizr), you can set this to an empty string and override the `fallbackTest` below to use that instead.  Of course, this won't help if you are loading those scripts off a CDN and they fail!
+If you already have a script loader (such as yepnope or Modernizr), you can set this to an empty string and override the `fallbackTest` below to use that instead.  Of course, this won't help if you are loading *those* scripts off a CDN and they fail!
 
 #### options.fallbackTest
 
@@ -169,9 +188,49 @@ Once the directory is determined, the script will look for files in `<bowerCompo
 Type: `Array`  
 Default: (none) **required**
 
-Array of sources or objects defining sources to cdnize.  Each item in the array can be one of two types, a simple glob or object hashmap.
+Array of sources or objects defining sources to cdnize.  Each item in the array can be one of three types, a simple glob, a public CDN string, or object hashmap.
 
-When using a glob, if it matches a source, the `defaultCDN` template is applied.  Because there is no `test`, the script will not have a fallback.  
+##### options.files.«glob»
+
+When using a glob, if it matches a source, the `defaultCDN` template is applied.  Because there is no `test`, the script will not have a fallback.
+
+*Examples:*
+```js
+'**/*.js' // matches any .js file anywhere
+'js/**/*.js' // matches any *.js file under the js folder
+'styles/main.css' // only matches styles/main.css, possibly rev'd or min'd based on options
+'img/icon/foo??.{png,gif,jpg}' // img/icon/foo10.png, img/icon/fooAA.gif, etc
+```
+
+##### options.files.«common-cdn»
+
+Public CDN strings make it easy to add known libraries from common public CDN repositories.  They always take the form of `'<provider>:<package>(@version)?'`.  Currently, cdnizer has built-in support for [Google](https://www.npmjs.org/package/google-cdn-data), [cdnjs](https://www.npmjs.org/package/cdnjs-cdn-data), and [jsDelivr](https://www.npmjs.org/package/jsdelivr-cdn-data), via the existing packages maintained by [Shahar Talmi](https://www.npmjs.org/~shahata).
+
+*Examples:*
+
+```js
+'google:jquery'
+'google:jquery@1.0.0' // provide a version to override bower OR if you are not using bower
+'google:angular'
+'cdnjs:angular.js' // you need `.js` for angular on cdnjs, but not on Google!
+'jsdelivr:angularjs' // jsdelivr has it different still
+```
+
+You can also use a common cdn while still providing your own overrides by [providing the `common` option within a hashmap](#optionsfilescommon).  You will need to do this if the CDN provider uses a different package name than bower, or if you want to provide a fallback test (excluding a few popular libraries).
+
+*Important Notes:*
+
+1. **Case matters** with these strings. Make sure you are not capitalizing the packages (such as `jQuery`, instead of `jquery`), or the output will be incorrect.
+
+2. The packages may have different names on different public CDNs.  Make sure you look up the package name on the CDN website first.  For example, AngularJS is `angular` on Google, `angular.js` on cdnjs, and `angularjs` on jsDelivr!
+
+3. You **must** provide the version if you are not using bower to manage your packages, or if you want to override the bower version (not recommended).
+
+4. Due to the way versions are calculated, `-beta*`, `-unstable*`, and `-snapshot*` releases will not work with common CDNs.  This means only projects with standard 1-, 2-, or 3-part version strings will work.
+
+5. The CDN packages available are limited to those included in the `cdn-data` packages, which means they might not always be up-to-date with the latest public packages.  However, the version information is not used at all by cdnizer, which means you can update to the latest version faster.
+
+##### options.files.«hashmap»
 
 The object hashmap gives you full control, using the following properties:
 
@@ -189,7 +248,14 @@ The object hashmap gives you full control, using the following properties:
 
 > Bower package name for this source or set of sources.  By providing the package name, cdnizer will look up the version string of the *currently installed* bower package, and provide it as a property to the `cdn` string.  This is done by looking for either the `bower.json` or `.bower.json` file within your bower components directory.
 
-> The benefit of doing it this way is that the version used from the CDN *always* matches your local copy.  It won't be automatically updated to the latest patch version without being tested. 
+> The benefit of doing it this way is that the version used from the CDN *always* matches your local copy.  It will never automatically be updated to a newer patch version without being tested.
+
+> ##### options.files[].common
+
+> Load in the default data for an existing common public CDN.  This has the same format as a [public CDN string](#optionsfilescommoncdn) above.
+
+> Using this option allows you to customize the settings for the package, by overriding any property in this section (e.g.: providing `test`, or a different `package` name).
+
 
 > ##### options.files[].cdn
 
@@ -198,15 +264,16 @@ The object hashmap gives you full control, using the following properties:
 
 > Provides a custom CDN string, which can be a simple static string, or contain one or more underscore/lodash template properties to be injected into the string:
 
-> * `version`: if [`package`](#optionsfilespackage) was provided, this is the currently installed version from bower.
+> * `versionFull`: if [`package`](#optionsfilespackage) was provided, this is the complete version currently installed version from bower.
+> * `version`: if `package` was provided, this is the `major(.minor)?(.patch)?` version number, minus any trailing information (such as `-beta*` or `-snapshot*`).
 > * `major`: if `package` was provided, this is the major version number.
 > * `minor`: if `package` was provided, this is the minor version number.
 > * `patch`: if `package` was provided, this is the patch version number.
 > * `defaultBase`: the default base provided above.  Note that this will *never* end with a trailing slash.
 > * `filepath`: the full path of the source, as it exists currently.  There is no guarantee about the whether this contains a leading slash or not, so be careful.
-> * `filepathRel`: the full path of the source, but guaranteed to *never* have a leading slash.
+> * `filepathRel`: the relative path of the source, guaranteed to *never* have a leading slash. The path is also processed against `options.relativeRoot` above, to try and remove any parent directory path elements.
 > * `filename`: the name of the file, without any parent directories
-> * `filenameMin`: the name of the file, *without* any rev tags (if `allowRev` is true), but *with* a `.min` extension added.  This won't add a min if there is one already. 
+> * `filenameMin`: the name of the file, *without* any rev tags (if `allowRev` is true), but *with* a `.min` extension added.  This won't add a min if there is one already.
 > * `package`: the bower package name, as provided above.
 
 > ##### options.files[].test
@@ -215,6 +282,23 @@ The object hashmap gives you full control, using the following properties:
 > Default: (none)
 
 > If provided, this string will be evaluated within a javascript block.  If the result is truthy, then we assume the CDN resource loaded properly.  If it isn't, then the original local file will be loaded.  This is ignored for files that don't get the [fallback script](#optionsfallbackscript).
+
+> When using a common public CDN, some popular packages come with fallback tests.  The current packages that have a built-in fallback test are:
+
+> * AngularJS
+> * Backbone.js
+> * Dojo
+> * EmberJS
+> * jQuery
+> * jQuery UI
+> * Lo-Dash
+> * MooTools
+> * Prototype
+> * React
+> * SwfObject
+> * Underscore
+
+> For any other packages, you'll need to provide the fallback test yourself.
 
 > See [`options.fallbackScript`](#optionsfallbackscript) and [`options.fallbackTest`](#optionsfallbacktest) for more information.
 
@@ -232,6 +316,13 @@ You can also specify just a regular expression. In that case, fallback will defa
 
 Equivalent example:<br />
 ```matchers: [ pattern: /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]```
+
+#### options.cdnDataLibraries
+
+Type: `Array`
+Default: `[]`
+
+Future-proof option to add additional `*-cdn-data` packages.  These packages *must* be in the same format as [`google-cdn-data`](https://www.npmjs.org/package/google-cdn-data).  The format is to only include the leading part of the package name, for example, `cdnjs-cdn-data` would be included as simply `'cdnjs'`.
 
 ## Help Support This Project
 

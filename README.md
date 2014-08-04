@@ -89,7 +89,11 @@ var cdnizerFactory = require("cdnizer"),
 	cdnizer = cdnizerFactory([
 					'google:angular', // that's it!
 					'cdnjs:jquery',
-					'jsdelivr:lodash'
+					{
+						cdn: 'jsdelivr:yui', // use a known CDN, while…
+						package: 'yui3', // overriding the package name for bower, and…
+						test: 'YUI' // providing a custom fallback test
+					}
 				]);
 ```
 
@@ -216,7 +220,7 @@ Public CDN strings make it easy to add known libraries from common public CDN re
 'jsdelivr:angularjs' // jsdelivr has it different still
 ```
 
-You can also use a common cdn while still providing your own overrides by [providing the `common` option within a hashmap](#optionsfilescommon).  You will need to do this if the CDN provider uses a different package name than bower, or if you want to provide a fallback test (excluding a few popular libraries).
+You can also use a common cdn while still providing your own overrides by [using a common CDN with the `cdn` option within a hashmap](#optionsfilescdn).  You will need to do this if the CDN provider uses a different package name than bower, or if you want to provide a fallback test (excluding a few popular libraries).
 
 *Important Notes:*
 
@@ -250,19 +254,20 @@ The object hashmap gives you full control, using the following properties:
 
 > The benefit of doing it this way is that the version used from the CDN *always* matches your local copy.  It will never automatically be updated to a newer patch version without being tested.
 
-> ##### options.files[].common
-
-> Load in the default data for an existing common public CDN.  This has the same format as a [public CDN string](#optionsfilescommon-cdn) above.
-
-> Using this option allows you to customize the settings for the package, by overriding any property in this section (e.g.: providing `test`, or a different `package` name).
-
-
 > ##### options.files[].cdn
 
 > Type: `String`  
 > Default: `options.defaultCDN`
 
-> Provides a custom CDN string, which can be a simple static string, or contain one or more underscore/lodash template properties to be injected into the string:
+> This it the template for the replacement string. It can either be a custom CDN string, or it can be a common public CDN string, using the same format as a [public CDN string](#optionsfilescommon-cdn) above.
+
+> *Common Public CDN String:*
+
+> Load in the default data for an existing common public CDN, using the format `'<provider>:<package>(@version)?'`. You can then customize the settings for the package, by overriding any property in this section (e.g.: providing a fallback `test`, a different `package` name, or even matching a different `file`).
+
+> *Custom CDN String:*
+
+> Provide a custom CDN string, which can be a simple static string, or contain one or more underscore/lodash template properties to be injected into the string:
 
 > * `versionFull`: if [`package`](#optionsfilespackage) was provided, this is the complete version currently installed version from bower.
 > * `version`: if `package` was provided, this is the `major(.minor)?(.patch)?` version number, minus any trailing information (such as `-beta*` or `-snapshot*`).

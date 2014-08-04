@@ -108,7 +108,7 @@ describe("cdnizer: bower tests", function() {
 				{
 					file: 'js/**/angular/angular.js',
 					package: 'angular',
-					cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ major }.${ minor }.${ patch }/angular.min.js'
+					cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/angular.min.js'
 				}
 			]
 		}, 'index.html', 'index-bowerrc.html');
@@ -158,7 +158,7 @@ describe("cdnizer: cdn-data", function() {
 		processInput({
 			files: [
 				{
-					common: 'cdnjs:angular.js',
+					cdn: 'cdnjs:angular.js',
 					package: 'angular'
 				}
 			]
@@ -178,11 +178,19 @@ describe("cdnizer: cdn-data", function() {
 			files: [
 				{
 					file: 'js/vendor/custom/jquery-ui-foo.js',
-					common: 'google:jquery-ui@4.4.4'
+					cdn: 'google:jquery-ui@4.4.4'
 				}
 			]
 		}, 'index-cdn-data.html', 'index-cdn-data-filename.html');
 	});
+
+	it("should ignore protocols (colons) in custom cdns", function() {
+		processInput({
+			files: ['css/main.css', 'js/**/*.js'],
+			defaultCDNBase: 'http://examplecdn/'
+		}, 'index.html', 'index-generic-with-protocol.html');
+	});
+
 });
 
 

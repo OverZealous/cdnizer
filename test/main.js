@@ -184,6 +184,31 @@ describe("cdnizer: cdn-data", function() {
 		}, 'index-cdn-data.html', 'index-cdn-data-filename.html');
 	});
 
+	it("should handle cdn data with alternate files", function() {
+		processInput({
+			files: [
+				'cdnjs:angular.js',
+				'cdnjs:angular.js:angular-touch.min.js',
+				'cdnjs:angular.js:i18n/angular-locale_fr-fr.js'
+			]
+		}, 'index-cdn-data-alt.html', 'index-cdn-data-alt.html');
+	});
+
+	it("should handle cdn data with alternate files, automated", function() {
+		processInput({
+			files: [
+				{
+					file: 'js/vendor/angular/*.js',
+					cdn: 'cdnjs:angular.js:${ filenameMin }'
+				},
+				{
+					file: 'js/vendor/angular/i18n/*.js',
+					cdn: 'cdnjs:angular.js:i18n/${ filename }'
+				}
+			]
+		}, 'index-cdn-data-alt.html', 'index-cdn-data-alt.html');
+	});
+
 	it("should ignore protocols (colons) in custom cdns", function() {
 		processInput({
 			files: ['css/main.css', 'js/**/*.js'],

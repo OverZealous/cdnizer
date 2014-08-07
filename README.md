@@ -162,7 +162,7 @@ var cdnizerFactory = require("cdnizer"),
 			cdn: 'jsdelivr:yui',   // You can also use a known CDN, while…
 			package: 'yui3',       // overriding the package name for Bower, and…
 			test: 'YUI'            // providing a custom fallback test
-		}
+		},
 		// you can also specify alternate files within a package:
 		'jsdelivr:yui:anim-base/anim-base-min.js@3.17.2'
 	]);

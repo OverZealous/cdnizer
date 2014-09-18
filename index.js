@@ -1,7 +1,14 @@
 var path = require('path'),
 	_ = require('lodash'),
 	util = require('./lib/util'),
-	parseOptions = require('./lib/parseOptions');
+	parseOptions = require('./lib/parseOptions'),
+
+	// Used to reset lodash to default template settings
+	lodashTemplateSettings = {
+		evaluate: _.templateSettings.evaluate,
+		interpolate: _.templateSettings.interpolate,
+		escape: _.templateSettings.escape
+	};
 
 function makeCdnizer(opts) {
 	"use strict";
@@ -27,10 +34,10 @@ function makeCdnizer(opts) {
 						package: fileInfo.package,
 						test: fileInfo.test
 					});
-					result += _.template(fileInfo.cdn || opts.defaultCDN, params);
+					result += _.template(fileInfo.cdn || opts.defaultCDN, params, lodashTemplateSettings);
 					result += post;
 					if(canAddFallback && m.fallback && fileInfo.test) {
-						result += _.template(opts.fallbackTest, params);
+						result += _.template(opts.fallbackTest, params, lodashTemplateSettings);
 						didAddFallback = true;
 					}
 					return result;

@@ -17,6 +17,7 @@ function processInput(opts, fixtureFileName, expectedFileName) {
 		expected = fs.readFileSync("test/expected/"+expectedFileName, "utf8"),
 		result = converter(srcFile);
 
+	//noinspection BadExpressionStatementJS
 	result.should.not.be.empty;
 
 	result.should.equal(expected);
@@ -47,7 +48,7 @@ describe("cdnizer: basic input", function() {
 			files: [
 				{
 					file: 'js/**/angular/angular.js',
-					test: 'window.angular'
+					test: "window['angular']"
 				}
 			],
 			defaultCDNBase: '//examplecdn'

@@ -28,7 +28,7 @@ function makeCdnizer(opts) {
 					params = _.merge(util.getVersionInfo(fileInfo, opts), {
 						defaultCDNBase: opts.defaultCDNBase,
 						filepath: url,
-						filepathRel: path.join(opts.relativeRoot, url).replace(/^\//, ''),
+						filepathRel: path.join(opts.relativeRoot, url).split(path.sep).join('/').replace(/^\//, ''),
 						filename: path.basename(url),
 						filenameMin: util.getFilenameMin(url, opts),
 						package: fileInfo.package,

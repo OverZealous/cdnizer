@@ -17,6 +17,7 @@
     "type": "git",
     "url": "git://github.com/OverZealous/cdnizer.git"
   },
+  "bin": "./bin/cli.js",
   "scripts": {
     "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
   },
@@ -25,7 +26,8 @@
     "google-cdn-data": "^0.1.6",
     "jsdelivr-cdn-data": "^0.1.1",
     "lodash": "~2.4.1",
-    "minimatch": "^1.0.0"
+    "minimatch": "^1.0.0",
+    "nomnom": "^1.8.0"
   },
   "devDependencies": {
     "mocha": "*",

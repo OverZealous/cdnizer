@@ -99,6 +99,13 @@ describe("cdnizer: basic input", function() {
 			defaultCDNBase: '//examplecdn'
 		}, 'index-attribs.html', 'index-attribs.html')
 	});
+
+	it("should handle line-wrapped elements", function() {
+		processInput({
+			files: ['css/main.css', 'js/**/*.js', 'img/**'],
+			defaultCDNBase: '//examplecdn/'
+		}, 'index-multiline.html', 'index-multiline-generic.html');
+	});
 });
 
 describe("cdnizer: bower tests", function() {

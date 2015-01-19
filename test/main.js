@@ -106,6 +106,14 @@ describe("cdnizer: basic input", function() {
 			defaultCDNBase: '//examplecdn/'
 		}, 'index-multiline.html', 'index-multiline-generic.html');
 	});
+
+	it("should handle relative paths", function() {
+		processInput({
+			relativeRoot: 'src/',
+			files: ['google:angular', '**/main.css', '**/*.js', '**/*.jpg'],
+			defaultCDNBase: '//examplecdn/'
+		}, 'index-relative.html', 'index-relative-generic.html');
+	});
 });
 
 describe("cdnizer: bower tests", function() {
@@ -275,3 +283,5 @@ describe("cdnizer: error handling", function() {
 	});
 
 });
+
+console.log(require('minimatch').makeRe('../**/foo.js'));

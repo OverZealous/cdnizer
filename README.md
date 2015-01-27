@@ -73,7 +73,7 @@ Then, use it like so:
 ```javascript
 var cdnizerFactory = require("cdnizer"),
     cdnizer = cdnizerFactory({
-        defaultBase: "//my.cdn.host/base",
+        defaultCDNBase: "//my.cdn.host/base",
         allowRev: true,
         allowMin: true,
         files: [

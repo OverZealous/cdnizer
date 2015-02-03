@@ -142,6 +142,28 @@ describe("cdnizer: bower tests", function() {
 			]
 		}, 'index.html', 'index-bower.html');
 	});
+
+	it("should revert to dot-bower-packages", function() {
+		processInput([
+			{
+				file: 'js/**/bad-pkg.js',
+				package: 'no-bower-version',
+				cdn: '//cdn/bad-pkg/${ version }/bad-pkg.js'
+			}
+		], 'bad-bower-pkg.html', 'bad-bower-pkg.html')
+	});
+
+	it("should throw on no bower version", function() {
+		(function() {
+			processInput([
+				{
+					file: 'js/**/bad-pkg.js',
+					package: 'no-dot-bower-version',
+					cdn: '//cdn/bad-pkg/${ version }/bad-pkg.js'
+				}
+			], 'bad-bower-pkg.html', 'bad-bower-pkg.html')
+		}).should.throw();
+	});
 });
 
 describe("cdnizer: css files", function() {

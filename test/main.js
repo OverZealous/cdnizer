@@ -114,6 +114,13 @@ describe("cdnizer: basic input", function() {
 			defaultCDNBase: '//examplecdn/'
 		}, 'index-relative.html', 'index-relative-generic.html');
 	});
+
+	it("should handle undescore templates", function() {
+		processInput({
+			files: ['css/main.css', 'js/**/*.js', 'img/**'],
+			defaultCDNBase: '//examplecdn/'
+		}, 'index-underscore-template.html', 'index-underscore-template.html');
+	});
 });
 
 describe("cdnizer: bower tests", function() {

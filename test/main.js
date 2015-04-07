@@ -121,6 +121,22 @@ describe("cdnizer: basic input", function() {
 			defaultCDNBase: '//examplecdn/'
 		}, 'index-underscore-template.html', 'index-underscore-template.html');
 	});
+
+	it("should handle inline javascript", function() {
+                debugger;
+                var cdnBase = '//cdnhost/libs/min';
+                processInput({
+                        files: [
+                                {
+                  file: 'libs/jquery.js',
+                  cdn: cdnBase + '/jquery.js'
+                },
+                {
+                  file: 'libs/underscore.js',
+                  cdn: cdnBase + '/underscore.js'
+                }]
+                }, 'index-inline-js.html', 'index-inline-js.html');
+        });
 });
 
 describe("cdnizer: bower tests", function() {

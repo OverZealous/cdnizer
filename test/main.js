@@ -13,8 +13,8 @@ var cdnizer = require("../");
 
 function processInput(opts, fixtureFileName, expectedFileName) {
 	var converter = cdnizer(opts),
-		srcFile = fs.readFileSync("test/fixtures/"+fixtureFileName, "utf8"),
-		expected = fs.readFileSync("test/expected/"+expectedFileName, "utf8"),
+		srcFile = fs.readFileSync("test/fixtures/" + fixtureFileName, "utf8"),
+		expected = fs.readFileSync("test/expected/" + expectedFileName, "utf8"),
 		result = converter(srcFile);
 
 	//noinspection BadExpressionStatementJS
@@ -80,7 +80,7 @@ describe("cdnizer: basic input", function() {
 		processInput({
 			files: ['img/**/*.jpg'],
 			defaultCDNBase: '//examplecdn',
-			matchers: [ /(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi ]
+			matchers: [/(<img\s.*?data-src=["'])(.+?)(["'].*?>)/gi]
 		}, 'index.html', 'index-data-src.html');
 	});
 
@@ -127,6 +127,21 @@ describe("cdnizer: basic input", function() {
 			files: ['css/main.css', 'js/**/*.js'],
 			defaultCDNBase: '//examplecdn/'
 		}, 'inline-javascript.html', 'inline-javascript.html');
+	});
+
+	it("should handle inline javascript", function() {
+		var cdnBase = '//cdnhost/libs/min';
+		processInput({
+			files: [
+				{
+					file: 'libs/jquery.js',
+					cdn: cdnBase + '/jquery.js'
+				},
+				{
+					file: 'libs/underscore.js',
+					cdn: cdnBase + '/underscore.js'
+				}]
+		}, 'index-inline-js.html', 'index-inline-js.html');
 	});
 });
 
@@ -190,7 +205,7 @@ describe("cdnizer: css files", function() {
 		processInput({
 			defaultCDNBase: '//examplecdn',
 			relativeRoot: 'style',
-			files: [ '**/*.{gif,png,jpg,jpeg}' ]
+			files: ['**/*.{gif,png,jpg,jpeg}']
 		}, 'style.css', 'style-generic.css');
 	});
 });
@@ -274,47 +289,47 @@ describe("cdnizer: cdn-data", function() {
 describe("cdnizer: error handling", function() {
 
 	it("should error on no input", function() {
-		(function(){
+		(function() {
 			cdnizer();
 		}).should.throw();
-		(function(){
+		(function() {
 			cdnizer([]);
 		}).should.throw();
-		(function(){
+		(function() {
 			cdnizer({});
 		}).should.throw();
-		(function(){
-			cdnizer({files:[]});
+		(function() {
+			cdnizer({ files: [] });
 		}).should.throw();
 	});
 
 	it("should error on invalid input", function() {
-		(function(){
+		(function() {
 			cdnizer(9);
 		}).should.throw();
-		(function(){
+		(function() {
 			cdnizer(null);
 		}).should.throw();
-		(function(){
-			cdnizer({files:31});
+		(function() {
+			cdnizer({ files: 31 });
 		}).should.throw();
-		(function(){
-			cdnizer({files:null});
+		(function() {
+			cdnizer({ files: null });
 		}).should.throw();
-		(function(){
-			cdnizer({files:{}});
+		(function() {
+			cdnizer({ files: {} });
 		}).should.throw();
 	});
 
 	it("should error on invalid files", function() {
-		(function(){
-			cdnizer({files:[{file:9}]});
+		(function() {
+			cdnizer({ files: [{ file: 9 }] });
 		}).should.throw();
-		(function(){
-			cdnizer({files:[{file:new Date()}]});
+		(function() {
+			cdnizer({ files: [{ file: new Date() }] });
 		}).should.throw();
-		(function(){
-			cdnizer({files:['/not/invalid', {file:new Date()}]});
+		(function() {
+			cdnizer({ files: ['/not/invalid', { file: new Date() }] });
 		}).should.throw();
 	});
 

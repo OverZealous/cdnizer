@@ -22,6 +22,9 @@ function makeCdnizer(opts) {
 
 		_.union(opts.matchers, util.matchers).forEach(function(m) {
 			contents = contents.replace(m.pattern, function(match, pre, url, post) {
+				if (url.indexOf('http') === 0) {
+					return match;
+				}
 				var fileInfo = util.findFileInfo(url, opts), result, params;
 				if(fileInfo) {
 					result = pre;

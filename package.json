@@ -25,15 +25,16 @@
     "cdnjs-cdn-data": "^0.1.1",
     "google-cdn-data": "^0.1.6",
     "jsdelivr-cdn-data": "^0.1.1",
-    "lodash": "~2.4.1",
+    "lodash": "^2.4.1",
     "minimatch": "^3.0.2",
     "nomnom": "^1.8.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "coveralls": "*",
-    "mocha-lcov-reporter": "*",
-    "istanbul": "*",
+    "coveralls": "^3.0.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.0.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "react": "16.2.0",
     "should": "^4.0.4"
   },
   "engines": {

@@ -1,14 +1,14 @@
-var path = require('path'),
-	_ = require('lodash'),
-	util = require('./lib/util'),
-	parseOptions = require('./lib/parseOptions'),
+var path = require('path');
+var _ = require('lodash');
+var util = require('./lib/util');
+var parseOptions = require('./lib/parseOptions');
+// Used to reset lodash to default template settings
+var lodashTemplateSettings = {
+	evaluate: _.templateSettings.evaluate,
+	interpolate: _.templateSettings.interpolate,
+	escape: _.templateSettings.escape
+};
 
-	// Used to reset lodash to default template settings
-	lodashTemplateSettings = {
-		evaluate: _.templateSettings.evaluate,
-		interpolate: _.templateSettings.interpolate,
-		escape: _.templateSettings.escape
-	};
 
 function makeCdnizer(opts) {
 	"use strict";
@@ -17,15 +17,15 @@ function makeCdnizer(opts) {
 
 	function cdnizer(contents) {
 
-		var canAddFallback = opts.shouldAddFallback && contents.indexOf('<head') !== -1,
-			didAddFallback = false;
+		var canAddFallback = opts.shouldAddFallback && contents.indexOf('<head') !== -1;
+		var didAddFallback = false;
 
 		_.union(opts.matchers, util.matchers).forEach(function(m) {
 			contents = contents.replace(m.pattern, function(match, pre, url, post) {
-				var fileInfo = util.findFileInfo(url, opts), result, params;
+				var fileInfo = util.findFileInfo(url, opts);
 				if(fileInfo) {
-					result = pre;
-					params = _.merge(util.getVersionInfo(fileInfo, opts), {
+					var result = pre;
+					var params = _.merge(util.getVersionInfo(fileInfo, opts), {
 						defaultCDNBase: opts.defaultCDNBase,
 						filepath: url,
 						// the split/join is to fix Windows idiotic backward paths.

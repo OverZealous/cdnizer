@@ -28,22 +28,28 @@ function cdnizerLoad(u) {
 …
 ```
 
-If you want to use this library during a [gulp](http://gulpjs.com/) build, [gulp-cdnizer](https://npmjs.org/package/gulp-cdnizer) has you covered.
+If you want to use this library inside a [gulp](http://gulpjs.com/) stream, [gulp-cdnizer](https://npmjs.org/package/gulp-cdnizer) has you covered.
 
 
 ### Features:
 * It's flexible without being overly complicated.
 * Handles private *and* multiple public CDNs in the same build.
-* It can use your Bower installation to determine the correct file versions—no more getting "upgraded" during your build.
+* It can use your Bower or NPM installation to determine the exact file versions—no more getting "upgraded" during your build.
 * Provides optional fallback scripts for failed file loading. (By default it can only handle failed JavaScript files, but it's easy to provide a custom solution.)
 
+
+### New & Breaking in version 2.0
+
+- Support for Node Modules, which is the new default mode
+- If you have the same module in both `node_modules` and `bower_components`, and you don't want to use `node_modules`, you'll need to set the `nodeModules` property to `false` in the general config, or set `ignoreNodeModules` to `true` in the per-package config.
+- Some default settings have changed, namely `allowRev` is turned off by default, since it causes too many unexpected errors.
 
 ### New in version 1.0
 
 cdnizer now can load CDN data from existing `*-cdn-data` packages, currently `google-cdn-data`, `cdnjs-cdn-data`, and `jsdelivr-cdn-data`.  Now you can [configure common public CDNs with a single line](#optionsfilescommon-cdn)!
 
 
-### Possible breaking change in 1.0
+**Possible breaking change in 1.0**
 
 The `version` field has been changed in this release.  Previously, it was the exact version as it existing within Bower.  Now, `version` is the string `major(.minor)?(.patch)?`, with any trailing (`-beta*`, `-snapshot*`, etc) information removed.  (Alpha-numeric characters that are attached to the version string, as in `1.0.0rc1`, are not stripped.)
 
@@ -55,7 +61,7 @@ You can still access the full version string via `versionFull`, which is not mod
 
 * [Usage](#usage)
 * [API](#api)
-* [Support This Project](#help-support-this-project)
+* [About This Project](#about-this-project)
 * [License](#license)
 
 
@@ -71,32 +77,32 @@ npm install --save cdnizer
 Then, use it like so:
 
 ```javascript
-var cdnizerFactory = require("cdnizer"),
-    cdnizer = cdnizerFactory({
-        defaultCDNBase: "//my.cdn.host/base",
-        allowRev: true,
-        allowMin: true,
-        files: [
-          
-            // This file is on the default CDN, and will replaced with //my.cdn.host/base/js/app.js
-			'js/app.js',
-			
-			// On Google's public CDN
-			{
-				file: 'vendor/angular/angular.js',
-				package: 'angular',
-				test: 'window.angular',
-				cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/angular.min.js'
-			},
-			
-			// On Firebase's public CDN
-			{
-				file: 'vendor/firebase/firebase.js',
-				test: 'window.Firebase',
-				cdn: '//cdn.firebase.com/v0/firebase.js'
-			}
-		]
-	});
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory({
+    defaultCDNBase: "//my.cdn.host/base",
+    allowRev: true,
+    allowMin: true,
+    files: [
+      
+        // This file is on the default CDN, and will replaced with //my.cdn.host/base/js/app.js
+		'js/app.js',
+		
+		// On Google's public CDN
+		{
+			file: 'vendor/angular/angular.js',
+			package: 'angular',
+			test: 'window.angular',
+			cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/angular.min.js'
+		},
+		
+		// On Firebase's public CDN
+		{
+			file: 'vendor/firebase/firebase.js',
+			test: 'window.Firebase',
+			cdn: '//cdn.firebase.com/v0/firebase.js'
+		}
+	]
+});
               
 // Load the file
 var contents = fs.readFileSync('./src/index.html', 'utf8');
@@ -108,44 +114,44 @@ contents = cdnizer(contents);
 Alternatively, you can just pass in the files array if you don't need to provide any options, and only have custom files:
 
 ```js
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory([
-		{
-			file: 'vendor/angular/angular.js',
-			package: 'angular',
-			test: 'window.angular',
-			// use alternate providers easily
-			cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ version }/angular.min.js'
-		},
-		{
-			file: 'vendor/firebase/firebase.js',
-			test: 'window.Firebase',
-			cdn: '//cdn.firebase.com/v0/firebase.js'
-		}
-	]);
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory([
+	{
+		file: 'vendor/angular/angular.js',
+		package: 'angular',
+		test: 'window.angular',
+		// use alternate providers easily
+		cdn: '//cdnjs.cloudflare.com/ajax/libs/angularjs/${ version }/angular.min.js'
+	},
+	{
+		file: 'vendor/firebase/firebase.js',
+		test: 'window.Firebase',
+		cdn: '//cdn.firebase.com/v0/firebase.js'
+	}
+]);
 ```
 
 You can also use globs to define groups of file, and dynamic filename properties:
 
 ```js
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory([{
-		file: 'vendor/angular/*.js',
-		package: 'angular',
-		test: 'window.angular',
-		cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/${ filenameMin }'
-	}]);
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory([{
+	file: 'vendor/angular/*.js',
+	package: 'angular',
+	test: 'window.angular',
+	cdn: '//ajax.googleapis.com/ajax/libs/angularjs/${ version }/${ filenameMin }'
+}]);
 ```
 
 Works great on `url()`s in CSS files, too:
 
 ```js
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory({
-		defaultCDNBase: '//my.cdn.url/',
-		relativeRoot: 'css',
-		files: ['**/*.{gif,png,jpg,jpeg}']
-	});
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory({
+	defaultCDNBase: '//my.cdn.url/',
+	relativeRoot: 'css',
+	files: ['**/*.{gif,png,jpg,jpeg}']
+});
 
 var cssFile = fs.readFileSync('./css/style.css', 'utf8');
 cssFile = cdnizer(cssFile);
@@ -154,45 +160,45 @@ cssFile = cdnizer(cssFile);
 **New in v1.0**, you can use simplified strings for common public CDNs, like so:
 
 ```js
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory([
-		'google:angular',          // for most libraries, that's all you'll need to do!
-		'cdnjs:jquery',
-		{
-			cdn: 'jsdelivr:yui',   // You can also use a known CDN, while…
-			package: 'yui3',       // overriding the package name for Bower, and…
-			test: 'window.YUI'     // providing a custom fallback test
-		},
-		// you can also specify alternate files within a package:
-		'jsdelivr:yui:anim-base/anim-base-min.js@3.17.2'
-	]);
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory([
+	'google:angular',          // for most libraries, that's all you'll need to do!
+	'cdnjs:jquery',
+	{
+		cdn: 'jsdelivr:yui',   // You can also use a known CDN, while…
+		package: 'yui3',       // overriding the package name for Bower, and…
+		test: 'window.YUI'     // providing a custom fallback test
+	},
+	// you can also specify alternate files within a package:
+	'jsdelivr:yui:anim-base/anim-base-min.js@3.17.2'
+]);
 ```
 
 Need multiple files from the one package on a common CDN? Here's two solutions:
 
 ```js
 // Manually list every file…
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory([
-		'cdnjs:angular.js:angular.min.js',
-		'cdnjs:angular.js:angular-touch.min.js',
-		'cdnjs:angular.js:i18n/angular-locale_fr-fr.js'
-	]);
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory([
+	'cdnjs:angular.js:angular.min.js',
+	'cdnjs:angular.js:angular-touch.min.js',
+	'cdnjs:angular.js:i18n/angular-locale_fr-fr.js'
+]);
 
 // Or wire up a pattern:
-var cdnizerFactory = require("cdnizer"),
-	cdnizer = cdnizerFactory([
-		// matches all root angular files
-		{
-			file: '**/angular/*.js',
-			cdn: 'cdnjs:angular.js:${ filenameMin }' // Yes, you can apply patterns to the filename!
-		},
-		// matches all i18n angular files
-		{
-			file: '**/angular/i18n/*.js',
-			cdn: 'cdnjs:angular.js:i18n/${ filename }' // These i18n files are not minified
-		}
-	]);
+var cdnizerFactory = require("cdnizer");
+var cdnizer = cdnizerFactory([
+	// matches all root angular files
+	{
+		file: '**/angular/*.js',
+		cdn: 'cdnjs:angular.js:${ filenameMin }' // Yes, you can apply patterns to the filename!
+	},
+	// matches all i18n angular files
+	{
+		file: '**/angular/i18n/*.js',
+		cdn: 'cdnjs:angular.js:i18n/${ filename }' // These i18n files are not minified
+	}
+]);
 ```
 
 
@@ -208,6 +214,7 @@ var cdnizerFactory = require("cdnizer"),
 	* [allowMin](#optionsallowmin)
 	* [fallbackScript](#optionsfallbackscript)
 	* [fallbackTest](#optionsfallbacktest)
+	* [nodeModules](#optionsnodemodules)
 	* [bowerComponents](#optionsbowercomponents)
 	* [matchers](#optionsmatchers)
 	* [cdnDataLibraries](#optionscdndatalibraries)
@@ -257,7 +264,7 @@ If you do *not* set `relativeRoot` when referencing relative files, your files w
 
 #### options.allowRev
 Type: `Boolean`  
-Default: `true`
+Default: `false`
 
 Allow for file names with `gulp-rev` appended strings, in the form of `<file>-XXXXXXXX.<ext>`.  If you are using the `gulp-rev` plugin, this will automatically match filenames that have a rev string appeneded to them.  If you are *not* using `gulp-rev`, then you can disable this by setting `allowRev` to `false`, which will prevent possible errors in accidentally matching similar file names.
 
@@ -266,7 +273,7 @@ You can always manually configure your globs to include an optional rev string b
 #### options.allowMin
 
 Type: `Boolean`  
-Default: `true`
+Default: `false`
 
 Allow for file names that optionally have `.min` inserted before the file extension (but after rev, if enabled).  This allows you to use the base name for a file, and have `cndizer` match the minified name.
 
@@ -294,12 +301,23 @@ Default: `'<script>if(!(${ test })) cdnizerLoad("${ filepath }");</script>'`
 
 Overwrite the default fallback test.  Note that all options availble to `options.files[].cdn` below are available to this template as well, along with the `options.files[].test` string.
 
+#### options.nodeModules
+
+Type: `String|Boolean`  
+Default: null
+
+If provided, this is the directory to look for node modules in. If not provided, and there's no existing `bower` configuration, cdnizer will fall back to `node_modules`.
+
+If this is set to `false`, it will not look in `node_modules` at all.
+
+Once the directory is determined, the script will look for files in `<nodeModules>/<package>/package.json` to try to determine the version of the installed component.
+
 #### options.bowerComponents
 
 Type: `String`  
 Default: null
 
-If provided, this is the directory to look for Bower components in.  If not provided, cdnizer will attempt to look for the `.bowerrc` file, and if that is not found or does not specify a directory, it falls back to `'./bower_components'`.
+If provided, this is the directory to look for Bower components in.  If not provided, cdnizer will attempt to look for the `.bowerrc` file, and if that is not found or does not specify a directory, it falls back to `'./bower_components'`. If that's not found, cdnizer falls back to `node_modules`.
 
 Once the directory is determined, the script will look for files in `<bowerComponents>/bower.json` or `<bowerComponents>/.bower.json` to try to determine the version of the installed component.
 
@@ -442,6 +460,13 @@ The object hashmap gives you full control, using the following properties:
 
 > The benefit of doing it this way is that the version used from the CDN *always* matches your local copy.  It will never automatically be updated to a newer patch version without being tested.
 
+> ##### options.files[].ignoreNodeModules
+
+> Type: `boolean`  
+> Default: (none)
+
+> If provided, and set to `true`, this prevents looking in the `node_modules` directory for matching packages. Should only be needed if you have the same package in both `node_modules` and `bower_components`, and need to use the bower copy for version info.
+
 > ##### options.files[].cdn
 
 > Type: `String`  
@@ -499,11 +524,7 @@ The object hashmap gives you full control, using the following properties:
 
 
 
-## Help Support This Project
-
-If you'd like to support this and other OverZealous Creations (Phil DeJarnett) projects, [donate via Gratipay][gratipay-url]!
-
-[![Support via Gratipay][gratipay-image]][gratipay-url]
+## About this Project
 
 You can learn a little more about me and some of the [work I do for open source projects in an article at CDNify.](https://cdnify.com/blog/overzealous-creations/)
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for finding file versions in `package.json`, thanks to [@jamendub](https://github.com/jamendub)
 - Added default support for `node_modules`
 - Added a changelog, cleaned up the code, etc.
+- `allowRev` is now disabled by default.
 
 ## Older
 

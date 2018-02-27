@@ -225,6 +225,7 @@ var cdnizer = cdnizerFactory([
 		* [file](#optionsfilesfile)
 		* [package](#optionsfilespackage)
 		* [cdn](#optionsfilescdn)
+		* [ignoreNodeModules](#optionsfilesignorenodemodules)
 		* [test](#optionsfilestest)
 
 	

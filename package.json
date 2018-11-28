@@ -17,7 +17,6 @@
     "type": "git",
     "url": "git://github.com/OverZealous/cdnizer.git"
   },
-  "bin": "./bin/cli.js",
   "scripts": {
     "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
   },

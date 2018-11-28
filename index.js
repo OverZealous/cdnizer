@@ -35,10 +35,10 @@ function makeCdnizer(opts) {
 						package: fileInfo.package,
 						test: fileInfo.test
 					});
-					result += _.template(fileInfo.cdn || opts.defaultCDN, params, lodashTemplateSettings);
+					result += _.template(fileInfo.cdn || opts.defaultCDN, lodashTemplateSettings)(params);
 					result += post;
 					if(canAddFallback && m.fallback && fileInfo.test) {
-						result += _.template(opts.fallbackTest, params, lodashTemplateSettings);
+						result += _.template(opts.fallbackTest, lodashTemplateSettings)(params);
 						didAddFallback = true;
 					}
 					return result;

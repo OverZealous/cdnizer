@@ -1,6 +1,6 @@
 {
   "name": "cdnizer",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A module for replacing local links with CDN links, includes fallbacks and customization.",
   "keywords": [
     "cdn"
@@ -25,9 +25,8 @@
     "cdnjs-cdn-data": "^0.1.1",
     "google-cdn-data": "^0.1.6",
     "jsdelivr-cdn-data": "^0.1.1",
-    "lodash": "^2.4.1",
-    "minimatch": "^3.0.2",
-    "nomnom": "^1.8.0"
+    "lodash": "^4.17.11",
+    "minimatch": "^3.0.2"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",

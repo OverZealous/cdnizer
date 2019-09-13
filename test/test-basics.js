@@ -133,5 +133,13 @@ module.exports = function(cdnizer, processInput) {
 					}]
 			}, 'index-inline-js.html', 'index-inline-js.html');
 		});
+
+		it("should handle excludeAbsolute config flag to ignore absolute URLs", function() {
+			processInput({
+				files: ['**/*.js', '**/*.png', '**/*.css'],
+				defaultCDNBase: '//examplecdn/',
+				excludeAbsolute: true,
+			}, 'index-exclusions.html', 'index-exclusions.html');
+		});
 	});
 };

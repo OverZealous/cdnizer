@@ -15,7 +15,7 @@ For example, if you have a development file that looks like this:
 
 You can use cdnizer to automatically convert it to this during your build process (*every* change here can be customized):
 
-```js
+```html
 <html>
 <head>
 <script>

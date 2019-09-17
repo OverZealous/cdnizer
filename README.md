@@ -371,11 +371,11 @@ In [some cases](https://github.com/OverZealous/cdnizer/issues/21) you may have t
 For example given a config like this
 ```js
 var cdnizerFactory = require("cdnizer");
-var cdnizer = cdnizerFactory(
+var cdnizer = cdnizerFactory({
 	files: ['**/*.js', '**/*.css'],
 	defaultCDNBase: '//examplecdn/',
 	excludeAbsolute: true
-]);
+});
 ```
 
 And an _index.html_ like this

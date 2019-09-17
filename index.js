@@ -35,7 +35,12 @@ function makeCdnizer(opts) {
 						package: fileInfo.package,
 						test: fileInfo.test
 					});
-					result += _.template(fileInfo.cdn || opts.defaultCDN, lodashTemplateSettings)(params);
+					var excludeCdnPrefix = /^([a-z]+:)?\/\//i.test(url);
+					var cdnTemplate = opts.excludeAbsolute && excludeCdnPrefix
+						? '<%= filepath %>'
+						: fileInfo.cdn || opts.defaultCDN;
+
+					result += _.template(cdnTemplate, lodashTemplateSettings)(params);
 					result += post;
 					if(canAddFallback && m.fallback && fileInfo.test) {
 						result += _.template(opts.fallbackTest, lodashTemplateSettings)(params);

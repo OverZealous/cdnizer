@@ -23,7 +23,7 @@
   "dependencies": {
     "cdnjs-cdn-data": "^0.1.1",
     "google-cdn-data": "^0.1.6",
-    "jsdelivr-cdn-data": "git://github.com/shahata/jsdelivr-cdn-data.git#d014a2ad1bdfb4c6e3d3cefc7f264435281b91e0",
+    "jsdelivr-cdn-data": "^1.0.4",
     "lodash": "^4.17.11",
     "minimatch": "^3.0.2"
   },

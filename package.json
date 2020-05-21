@@ -24,7 +24,7 @@
     "cdnjs-cdn-data": "^0.1.1",
     "google-cdn-data": "^0.1.6",
     "jsdelivr-cdn-data": "^1.0.4",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.12",
     "minimatch": "^3.0.2"
   },
   "devDependencies": {

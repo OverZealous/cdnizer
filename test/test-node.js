@@ -30,8 +30,7 @@ module.exports = function(cdnizer, processInput) {
 			}, 'index-node.html', 'index-node-alt.html');
 		});
 
-		it('should work for issue 29', function() {
-			// NOTE: without the leading `/`, the output features semi-random quotes
+		it('should not reproduce issue 29', function() {
 			processInput({
 				nodeModules: './test/fixtures/node_modules',
 				files: [

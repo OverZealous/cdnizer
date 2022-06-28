@@ -30,25 +30,24 @@ module.exports = function(cdnizer, processInput) {
 			}, 'index-node.html', 'index-node-alt.html');
 		});
 
-		it('should work for issue 29', function() {
-			// NOTE: without the leading `/`, the output features semi-random quotes
+		it('should not reproduce issue 29', function() {
 			processInput({
 				nodeModules: './test/fixtures/node_modules',
 				files: [
 					{
-						file: '/**/jquery/**',
+						file: '**/jquery/**',
 						package: 'jquery',
 						cdn: 'https://cdnjs.cloudflare.com/ajax/libs/${package}/${version}/${filenameMin}',
 					}, {
-						file: '/**/lodash/**',
+						file: '**/lodash/**',
 						package: 'lodash',
 						cdn: 'https://cdn.jsdelivr.net/npm/${package}@${version}/${filenameMin}',
 					}, {
-						file: '/**/backbone/**',
+						file: '**/backbone/**',
 						package: 'backbone',
 						cdn: 'https://cdnjs.cloudflare.com/ajax/libs/${package}/${version}/${filenameMin}',
 					}, {
-						file: '/**/handlebars/**',
+						file: '**/handlebars/**',
 						package: 'handlebars',
 						cdn: 'https://cdn.jsdelivr.net/npm/${package}@${version}/dist/handlebars.runtime.min.js',
 					}
